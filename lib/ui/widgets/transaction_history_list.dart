@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../models/transaction.dart';
 import '../../models/category.dart';
+import '../../blocs/transaction/transaction_bloc.dart';
+import '../../blocs/transaction/transaction_event.dart';
+import '../screens/transaction_form_screen.dart';
 
 class TransactionHistoryList extends StatelessWidget {
   final List<Transaction> transactions;
   final List<Category> categories;
+  final String activeUserId;
+  final bool isSharedMode;
 
   const TransactionHistoryList({
     super.key,
     required this.transactions,
     required this.categories,
+    required this.activeUserId,
+    this.isSharedMode = false,
   });
 
   @override
@@ -253,7 +261,7 @@ class TransactionHistoryList extends StatelessWidget {
   ) {
     showModalBottomSheet(
       context: context,
-      builder: (context) {
+      builder: (modalContext) {
         final isIncome = transaction.type == TransactionType.income;
         final color = isIncome ? Colors.green : Colors.red;
 
@@ -268,11 +276,11 @@ class TransactionHistoryList extends StatelessWidget {
                 children: [
                   Text(
                     'Detalhes da Transação',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(modalContext).textTheme.titleLarge,
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(modalContext),
                   ),
                 ],
               ),
@@ -291,34 +299,46 @@ class TransactionHistoryList extends StatelessWidget {
               if (transaction.note != null && transaction.note!.isNotEmpty)
                 _buildDetailRow('Observação', transaction.note!),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        // TODO: Implementar edição
-                      },
-                      icon: const Icon(Icons.edit),
-                      label: const Text('Editar'),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        // TODO: Implementar exclusão
-                      },
-                      icon: const Icon(Icons.delete),
-                      label: const Text('Excluir'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
+              if (!isSharedMode)
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.pop(modalContext);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TransactionFormScreen(
+                                type: transaction.type,
+                                activeUserId: activeUserId,
+                                transaction: transaction,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Editar'),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          // Primeiro fechar o modal
+                          Navigator.pop(modalContext);
+                          // Então confirmar e excluir
+                          await _confirmDelete(context, transaction, category);
+                        },
+                        icon: const Icon(Icons.delete),
+                        label: const Text('Excluir'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         );
@@ -354,5 +374,51 @@ class TransactionHistoryList extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmDelete(
+    BuildContext context,
+    Transaction transaction,
+    Category category,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Excluir Transação'),
+        content: Text(
+          'Deseja realmente excluir esta transação de ${category.name} no valor de R\$ ${transaction.amount.toStringAsFixed(2)}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Excluir'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      if (!context.mounted) return;
+
+      // Disparar evento de exclusão
+      context.read<TransactionBloc>().add(DeleteTransaction(transaction.id));
+
+      // Mostrar feedback
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Transação excluída com sucesso'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }

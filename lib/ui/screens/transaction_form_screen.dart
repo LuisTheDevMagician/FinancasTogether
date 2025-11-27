@@ -52,6 +52,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
       _amountController.text = widget.transaction!.amount.toStringAsFixed(2);
       _noteController.text = widget.transaction!.note ?? '';
       _selectedDate = widget.transaction!.date;
+      // A categoria será definida quando as categorias forem carregadas
     }
   }
 
@@ -61,7 +62,11 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isIncome ? 'Nova Entrada' : 'Nova Saída'),
+        title: Text(
+          widget.transaction == null
+              ? (isIncome ? 'Nova Entrada' : 'Nova Saída')
+              : (isIncome ? 'Editar Entrada' : 'Editar Saída'),
+        ),
       ),
       body: BlocListener<TransactionBloc, TransactionState>(
         listener: (context, state) {
@@ -134,6 +139,15 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
               BlocBuilder<CategoryBloc, CategoryState>(
                 builder: (context, state) {
                   if (state is CategoriesLoaded) {
+                    // Se editando e categoria ainda não selecionada, encontrar a categoria correta
+                    if (widget.transaction != null &&
+                        _selectedCategory == null) {
+                      _selectedCategory = state.categories.firstWhere(
+                        (cat) => cat.id == widget.transaction!.categoryId,
+                        orElse: () => state.categories.first,
+                      );
+                    }
+
                     if (state.categories.isEmpty) {
                       return Card(
                         child: Padding(

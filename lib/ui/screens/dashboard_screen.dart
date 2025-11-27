@@ -234,6 +234,8 @@ class DashboardScreenState extends State<DashboardScreen> {
                                   TransactionHistoryList(
                                     transactions: transactions,
                                     categories: categories,
+                                    activeUserId: widget.activeUserId ?? '',
+                                    isSharedMode: _isSharedMode,
                                   ),
 
                                   const SizedBox(height: 80),

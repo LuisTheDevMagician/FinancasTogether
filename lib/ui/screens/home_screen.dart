@@ -83,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 24),
-            // TODO: Implementar ExpandingMenu widget aqui
             ElevatedButton.icon(
               onPressed: () {
                 if (_activeUserId == null || _activeUserId!.isEmpty) {

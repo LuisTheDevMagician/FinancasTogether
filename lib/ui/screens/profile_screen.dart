@@ -36,7 +36,10 @@ class ProfileScreen extends StatelessWidget {
             'Selecione o usuário ativo ou crie um novo',
             style: TextStyle(
               fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withAlpha((0.7 * 255).round()),
             ),
           ),
           const SizedBox(height: 24),

@@ -1,6 +1,8 @@
 import '../data/daos/transaction_dao.dart';
 import '../models/transaction.dart' as models;
 import 'package:uuid/uuid.dart';
+import 'user_repository.dart';
+import 'category_repository.dart';
 
 class TransactionRepository {
   final TransactionDAO _transactionDAO = TransactionDAO();
@@ -14,6 +16,17 @@ class TransactionRepository {
     required DateTime date,
     String? note,
   }) async {
+    // Verificar se usuário e categoria existem para evitar FK error
+    final user = await UserRepository().getById(userId);
+    if (user == null) {
+      throw Exception('Usuário não encontrado: $userId');
+    }
+
+    final category = await CategoryRepository().getById(categoryId);
+    if (category == null) {
+      throw Exception('Categoria não encontrada: $categoryId');
+    }
+
     final transaction = models.Transaction(
       id: _uuid.v4(),
       userId: userId,

@@ -34,7 +34,7 @@ void main() async {
 }
 
 // Global key para acessar o state do app
-final GlobalKey<_MyAppState> appKey = GlobalKey<_MyAppState>();
+final GlobalKey<State<MyApp>> appKey = GlobalKey<State<MyApp>>();
 
 class MyApp extends StatefulWidget {
   final ThemeMode initialThemeMode;

@@ -19,7 +19,7 @@ class BottomNav extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha((0.1 * 255).round()),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -83,7 +83,7 @@ class BottomNav extends StatelessWidget {
               size: 28,
               color: isSelected
                   ? colorScheme.primary
-                  : colorScheme.onSurface.withOpacity(0.6),
+                  : colorScheme.onSurface.withAlpha((0.6 * 255).round()),
             ),
             const SizedBox(height: 4),
             Text(
@@ -93,7 +93,7 @@ class BottomNav extends StatelessWidget {
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 color: isSelected
                     ? colorScheme.primary
-                    : colorScheme.onSurface.withOpacity(0.6),
+                    : colorScheme.onSurface.withAlpha((0.6 * 255).round()),
               ),
             ),
           ],

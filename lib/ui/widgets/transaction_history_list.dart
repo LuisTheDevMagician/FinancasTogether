@@ -130,7 +130,7 @@ class TransactionHistoryList extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: categoryColor.withOpacity(0.2),
+          backgroundColor: categoryColor.withAlpha((0.2 * 255).round()),
           child: Icon(
             _getCategoryIcon(category.name),
             color: categoryColor,

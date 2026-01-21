@@ -210,6 +210,7 @@ class ExportHelpers {
 
   // Compartilhar arquivo
   static Future<void> shareFile(String filePath) async {
+    // ignore: deprecated_member_use
     await Share.shareXFiles([
       XFile(filePath),
     ], subject: 'Relatório Finanças Together');

@@ -175,7 +175,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
                     }
 
                     return DropdownButtonFormField<Category>(
-                      value: _selectedCategory,
+                      initialValue: _selectedCategory,
                       decoration: const InputDecoration(
                         labelText: 'Categoria',
                         icon: Icon(Icons.category),

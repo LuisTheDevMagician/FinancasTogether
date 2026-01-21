@@ -202,7 +202,7 @@ class SharedPeriodBarChart extends StatelessWidget {
       final baseColor = Color(int.parse('0xFF$hexColor'));
 
       // Cor de entrada: versão mais clara
-      final incomeColor = baseColor.withOpacity(0.7);
+      final incomeColor = baseColor.withAlpha((0.7 * 255).round());
 
       // Cor de saída: versão mais escura
       final outcomeColor =

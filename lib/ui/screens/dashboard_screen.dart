@@ -112,7 +112,7 @@ class DashboardScreenState extends State<DashboardScreen> {
               // Importar a função do main.dart
               final appState = appKey.currentState;
               if (appState != null) {
-                appState.toggleTheme();
+                (appState as dynamic).toggleTheme();
               }
             },
           ),
@@ -288,8 +288,8 @@ class DashboardScreenState extends State<DashboardScreen> {
                 onPressed: () {
                   _showExportDialog(context, transactions);
                 },
-                child: const Icon(Icons.download),
                 tooltip: 'Exportar',
+                child: const Icon(Icons.download),
               ),
             ],
           );
@@ -340,7 +340,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           border: Border.all(
             color: isSelected
                 ? colorScheme.primary
-                : colorScheme.onSurface.withOpacity(0.3),
+                : colorScheme.onSurface.withAlpha((0.3 * 255).round()),
           ),
         ),
         child: Text(

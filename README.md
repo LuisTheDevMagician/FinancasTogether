@@ -1,3 +1,10 @@
+# Links
+
+### Linkedin:
+
+### Youtube: https://youtu.be/L9iuU-hTAw4
+
+
 # Finanças Together
 
 Aplicativo Flutter para gestão financeira colaborativa com múltiplos perfis de usuário, totalmente offline.

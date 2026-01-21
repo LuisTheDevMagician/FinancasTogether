@@ -1,6 +1,6 @@
 # Links
 
-### Linkedin:
+### Linkedin: https://www.linkedin.com/posts/luis-eduardo-b509272b7_finanaexas-flutter-dart-activity-7419819640488497153-J_B1?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEwiM6wBquL9S-ZRIUs5IuZm6uW9IYh1LKY
 
 ### Youtube: https://youtu.be/L9iuU-hTAw4
 
